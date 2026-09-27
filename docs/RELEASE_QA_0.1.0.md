@@ -49,8 +49,8 @@
 
 ### Resource usage
 - [x] Idle CPU checked – 0 % observed
-- [x] Idle memory checked – 9.1 MB observed
-- [x] No unexpected background polling observed – idle disk 0 MB/s and network 0 Mbit/s observed
+- [x] Idle memory checked – 9.1 MB initial idle observed; stress plateau 23.9 MB -> 23.8 MB after repeated dialog/cleanup cycles
+- [x] No unexpected background polling observed – idle disk 0 MB/s and network 0 Mbit/s observed; repeated stress cycle shows no continuing memory growth
 
 ### Packaging
 - [ ] Standard build starts with .NET 10 Desktop Runtime installed
