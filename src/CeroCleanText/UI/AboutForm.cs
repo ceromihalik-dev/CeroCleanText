@@ -10,6 +10,7 @@ internal sealed class AboutForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(560, 440);
         Font = new Font("Segoe UI", 10F);
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
