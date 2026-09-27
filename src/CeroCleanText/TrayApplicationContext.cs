@@ -25,7 +25,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _trayIcon = new NotifyIcon
         {
             Text = "CeroCleanText 0.1.0",
-            Icon = SystemIcons.Application,
+            Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application,
             ContextMenuStrip = menu,
             Visible = true
         };
