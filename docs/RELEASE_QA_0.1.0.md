@@ -34,12 +34,12 @@
 - [x] Notification preference persists after restart
 
 ### Clipboard
-- [ ] Clean clipboard command works
-- [ ] Selected-text cleanup restores previous clipboard content
+- [x] Clean clipboard command works
+- [ ] Selected-text cleanup restores previous clipboard content – FAIL found, fix pending retest
 
 ### External links
-- [ ] GitHub link opens correct project
-- [ ] PayPal support link opens correct hosted donation page
+- [x] GitHub link opens correct project
+- [x] PayPal support link opens correct hosted donation page
 
 ### Compatibility
 - [ ] Notepad
@@ -61,6 +61,6 @@
 
 ## Release gate
 
-Status: IN QA – Startup / process / notification block PASS
+Status: BLOCKED – clipboard restore regression requires retest
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
