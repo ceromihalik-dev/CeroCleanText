@@ -30,14 +30,14 @@ internal sealed class AboutForm : Form
             Text = "CeroCleanText",
             AutoSize = true,
             Font = new Font("Segoe UI", 18F, FontStyle.Bold),
-            Location = new Point(125, 32)
+            Location = new Point(138, 34)
         };
         var version = new Label
         {
             Text = "Sauberer Text – ganz automatisch.\r\nVersion 0.1.0",
             AutoSize = true,
             Font = new Font("Segoe UI", 12F),
-            Location = new Point(126, 68)
+            Location = new Point(139, 70)
         };
         var slogan = new Label
         {
@@ -93,7 +93,7 @@ internal sealed class AboutForm : Form
             Image = Icon.ExtractAssociatedIcon(Application.ExecutablePath)?.ToBitmap(),
             SizeMode = PictureBoxSizeMode.Zoom,
             Location = new Point(28, 28),
-            Size = new Size(78, 78)
+            Size = new Size(92, 92)
         };
 
         Controls.AddRange([logo, title, version, slogan, privacy, github, support, copyright, close]);
