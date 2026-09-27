@@ -35,14 +35,14 @@ internal sealed class TrayApplicationContext : ApplicationContext
             if (e.Button == MouseButtons.Right)
                 _lastTargetWindow = _foregroundTracker.LastExternalWindow;
         };
-        menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
-        menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
+        menu.Items.Add("🧹 Jetzt bereinigen    Ctrl+Alt+T", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
+        menu.Items.Add("📋 Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_startupItem);
-        menu.Items.Add("Einstellungen", null, (_, _) => ShowSettings());
+        menu.Items.Add("⚙ Einstellungen ...", null, (_, _) => ShowSettings());
         menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add("Über CeroCleanText", null, (_, _) => ShowAbout());
-        menu.Items.Add("❤️ Projekt unterstützen", null, (_, _) => OpenDonationPage());
+        menu.Items.Add("ⓘ Über CeroCleanText ...", null, (_, _) => ShowAbout());
+        menu.Items.Add("❤️ Projekt unterstützen ...", null, (_, _) => OpenDonationPage());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Beenden", null, (_, _) => ExitThread());
 
