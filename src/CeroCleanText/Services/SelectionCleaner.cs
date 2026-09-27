@@ -13,7 +13,7 @@ internal static class SelectionCleaner
 
     public static async Task<SelectionCleanResult> CleanSelectionAsync(IntPtr targetWindow, bool waitForHotkeyRelease = false)
     {
-        var backup = await TryGetClipboardDataAsync();
+        var backupText = await TryGetTextAsync();
 
         try
         {
@@ -51,8 +51,8 @@ internal static class SelectionCleaner
         }
         finally
         {
-            if (backup is not null)
-                await TrySetClipboardDataAsync(backup);
+            if (backupText is not null)
+                await TrySetTextAsync(backupText);
         }
     }
 
@@ -76,23 +76,6 @@ internal static class SelectionCleaner
                 return Clipboard.ContainsText()
                     ? Clipboard.GetText(TextDataFormat.UnicodeText)
                     : null;
-            }
-            catch (ExternalException) when (attempt + 1 < ClipboardRetries)
-            {
-                await Task.Delay(RetryDelayMs);
-            }
-        }
-
-        return null;
-    }
-
-    private static async Task<IDataObject?> TryGetClipboardDataAsync()
-    {
-        for (var attempt = 0; attempt < ClipboardRetries; attempt++)
-        {
-            try
-            {
-                return Clipboard.GetDataObject();
             }
             catch (ExternalException) when (attempt + 1 < ClipboardRetries)
             {
@@ -128,22 +111,6 @@ internal static class SelectionCleaner
             try
             {
                 Clipboard.Clear();
-                return;
-            }
-            catch (ExternalException) when (attempt + 1 < ClipboardRetries)
-            {
-                await Task.Delay(RetryDelayMs);
-            }
-        }
-    }
-
-    private static async Task TrySetClipboardDataAsync(IDataObject data)
-    {
-        for (var attempt = 0; attempt < ClipboardRetries; attempt++)
-        {
-            try
-            {
-                Clipboard.SetDataObject(data, copy: true);
                 return;
             }
             catch (ExternalException) when (attempt + 1 < ClipboardRetries)
