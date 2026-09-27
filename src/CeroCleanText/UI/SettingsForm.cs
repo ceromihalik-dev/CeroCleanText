@@ -15,6 +15,7 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(720, 430);
         Font = new Font("Segoe UI", 10F);
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
@@ -25,9 +26,9 @@ internal sealed class SettingsForm : Form
         var generalButton = NavButton("⚙  Allgemein", 28);
         var hotkeyButton = NavButton("⌨  Hotkey", 78);
         var infoButton = NavButton("ⓘ  Info", 128);
-        generalButton.Click += (_, _) => ShowGeneral();
-        hotkeyButton.Click += (_, _) => ShowHotkey();
-        infoButton.Click += (_, _) => ShowInfo();
+        generalButton.Click += (_, _) => { SelectNav(generalButton, hotkeyButton, infoButton); ShowGeneral(); };
+        hotkeyButton.Click += (_, _) => { SelectNav(hotkeyButton, generalButton, infoButton); ShowHotkey(); };
+        infoButton.Click += (_, _) => { SelectNav(infoButton, generalButton, hotkeyButton); ShowInfo(); };
         nav.Controls.AddRange([generalButton, hotkeyButton, infoButton]);
 
         _startup = new CheckBox
@@ -41,6 +42,7 @@ internal sealed class SettingsForm : Form
 
         Controls.Add(_content);
         Controls.Add(nav);
+        SelectNav(generalButton, hotkeyButton, infoButton);
         ShowGeneral();
     }
 
@@ -113,6 +115,17 @@ internal sealed class SettingsForm : Form
             Font = new Font("Segoe UI", 14F, FontStyle.Bold),
             Location = new Point(30, 25)
         });
+    }
+
+    private static void SelectNav(Button selected, params Button[] others)
+    {
+        selected.BackColor = Color.FromArgb(218, 237, 255);
+        selected.ForeColor = Color.FromArgb(0, 90, 190);
+        foreach (var button in others)
+        {
+            button.BackColor = Color.Transparent;
+            button.ForeColor = SystemColors.ControlText;
+        }
     }
 
     private static Button NavButton(string text, int y) => new()
