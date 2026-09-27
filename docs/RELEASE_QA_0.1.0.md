@@ -35,7 +35,7 @@
 
 ### Clipboard
 - [x] Clean clipboard command works
-- [ ] Selected-text cleanup restores previous clipboard content – FAIL found, fix pending retest
+- [x] Selected-text cleanup restores previous clipboard content – regression fixed and physically retested PASS
 
 ### External links
 - [x] GitHub link opens correct project
@@ -61,6 +61,6 @@
 
 ## Release gate
 
-Status: BLOCKED – clipboard restore regression requires retest
+Status: IN QA – startup/process/notification and clipboard/link blocks PASS
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
