@@ -6,17 +6,41 @@ internal sealed class HotkeyWindow : NativeWindow, IDisposable
 {
     private const int WmHotkey = 0x0312;
     private const int HotkeyId = 0x4343;
-    private const uint ModControl = 0x0002;
-    private const uint ModAlt = 0x0001;
-    private const uint VkT = 0x54;
 
     public event EventHandler? Pressed;
+
+    public uint Modifiers { get; private set; }
+    public uint Key { get; private set; }
 
     public HotkeyWindow()
     {
         CreateHandle(new CreateParams());
-        if (!RegisterHotKey(Handle, HotkeyId, ModControl | ModAlt, VkT))
-            throw new InvalidOperationException("Ctrl+Alt+T could not be registered.");
+        if (!TryRegister(UserSettingsService.HotkeyModifiers, UserSettingsService.HotkeyKey))
+        {
+            if (!TryRegister(0x0003, 0x54))
+                throw new InvalidOperationException("The CeroCleanText global hotkey could not be registered.");
+        }
+    }
+
+    public bool TryRegister(uint modifiers, uint key)
+    {
+        if (Handle == IntPtr.Zero)
+            return false;
+
+        if (Modifiers != 0 || Key != 0)
+            UnregisterHotKey(Handle, HotkeyId);
+
+        if (RegisterHotKey(Handle, HotkeyId, modifiers, key))
+        {
+            Modifiers = modifiers;
+            Key = key;
+            return true;
+        }
+
+        if (Modifiers != 0 || Key != 0)
+            RegisterHotKey(Handle, HotkeyId, Modifiers, Key);
+
+        return false;
     }
 
     protected override void WndProc(ref Message m)
