@@ -76,6 +76,15 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private void ShowSettings()
     {
         using var form = new SettingsForm();
+        form.HotkeyChangeRequested += (_, e) =>
+        {
+            if (!_hotkey.TryRegister(e.Modifiers, e.Key))
+                return;
+
+            UserSettingsService.HotkeyModifiers = e.Modifiers;
+            UserSettingsService.HotkeyKey = e.Key;
+            e.Accepted = true;
+        };
         form.ShowDialog();
         _startupItem.Checked = StartupService.IsEnabled();
     }
