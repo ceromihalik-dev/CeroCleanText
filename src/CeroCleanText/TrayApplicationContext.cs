@@ -54,11 +54,18 @@ internal sealed class TrayApplicationContext : ApplicationContext
         };
     }
 
-    private static async Task CleanSelectionAsync(IntPtr targetWindow, bool waitForHotkeyRelease = false)
+    private async Task CleanSelectionAsync(IntPtr targetWindow, bool waitForHotkeyRelease = false)
     {
         try
         {
-            await SelectionCleaner.CleanSelectionAsync(targetWindow, waitForHotkeyRelease);
+            var result = await SelectionCleaner.CleanSelectionAsync(targetWindow, waitForHotkeyRelease);
+            if (result.Success && result.Changed && UserSettingsService.ShowCleanNotification)
+            {
+                _trayIcon.BalloonTipTitle = "Text bereinigt";
+                _trayIcon.BalloonTipText = "Der markierte Text wurde erfolgreich bereinigt.";
+                _trayIcon.BalloonTipIcon = ToolTipIcon.Info;
+                _trayIcon.ShowBalloonTip(1800);
+            }
         }
         catch
         {
