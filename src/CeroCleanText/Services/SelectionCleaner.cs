@@ -11,12 +11,14 @@ internal static class SelectionCleaner
     private const int CopyWaitMs = 120;
     private const int PasteWaitMs = 180;
 
-    public static async Task<SelectionCleanResult> CleanSelectionAsync(IntPtr targetWindow)
+    public static async Task<SelectionCleanResult> CleanSelectionAsync(IntPtr targetWindow, bool waitForHotkeyRelease = false)
     {
         var backup = await TryGetClipboardDataAsync();
 
         try
         {
+            if (waitForHotkeyRelease && !await KeyboardInputService.WaitForHotkeyModifiersReleasedAsync())
+                return new SelectionCleanResult(false, $"HOTKEY_RELEASE_FAILED: {KeyboardInputService.LastError}");
             if (targetWindow != IntPtr.Zero)
             {
                 SetForegroundWindow(targetWindow);
