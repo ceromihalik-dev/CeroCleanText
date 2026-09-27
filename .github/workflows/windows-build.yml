@@ -39,10 +39,23 @@ jobs:
           -p:DebugSymbols=false
           --output artifacts/framework-dependent
 
+      - name: Publish trimmed self-contained Windows x64 (experimental)
+        run: >
+          dotnet publish src/CeroCleanText/CeroCleanText.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:PublishTrimmed=true
+          -p:TrimMode=partial
+          -p:DebugType=None
+          -p:DebugSymbols=false
+          --output artifacts/self-contained-trimmed
+
       - name: Report executable sizes
         shell: pwsh
         run: |
-          Get-Item artifacts/self-contained/CeroCleanText.exe, artifacts/framework-dependent/CeroCleanText.exe |
+          Get-Item artifacts/self-contained/CeroCleanText.exe, artifacts/self-contained-trimmed/CeroCleanText.exe, artifacts/framework-dependent/CeroCleanText.exe |
             Select-Object FullName, Length |
             Format-Table -AutoSize
 
@@ -50,6 +63,12 @@ jobs:
         with:
           name: CeroCleanText-0.1.0-win-x64-self-contained
           path: artifacts/self-contained/CeroCleanText.exe
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CeroCleanText-0.1.0-win-x64-self-contained-trimmed-QA
+          path: artifacts/self-contained-trimmed/CeroCleanText.exe
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
