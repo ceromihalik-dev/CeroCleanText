@@ -32,14 +32,14 @@ internal sealed class AboutForm : Form
         };
         var version = new Label
         {
-            Text = "Version 0.1.0",
+            Text = "Sauberer Text – ganz automatisch.\r\nVersion 0.1.0",
             AutoSize = true,
             Font = new Font("Segoe UI", 12F),
-            Location = new Point(116, 72)
+            Location = new Point(116, 70)
         };
         var slogan = new Label
         {
-            Text = "Sauberer Text – ganz automatisch.",
+            Text = "100 % lokal · keine Textdatenübertragung",
             AutoSize = true,
             Font = new Font("Segoe UI", 11F),
             Location = new Point(30, 125)
@@ -70,6 +70,14 @@ internal sealed class AboutForm : Form
         };
         support.LinkClicked += (_, _) => OpenUrl("https://www.paypal.com/donate/?hosted_button_id=Y39Q96VMSJWG2");
 
+        var copyright = new Label
+        {
+            Text = "© 2026 C. Mihalik",
+            AutoSize = true,
+            ForeColor = SystemColors.GrayText,
+            Location = new Point(30, 370)
+        };
+
         var close = new Button
         {
             Text = "Schließen",
@@ -78,7 +86,7 @@ internal sealed class AboutForm : Form
             Location = new Point(370, 365)
         };
 
-        Controls.AddRange([mark, title, version, slogan, privacy, github, support, close]);
+        Controls.AddRange([mark, title, version, slogan, privacy, github, support, copyright, close]);
         AcceptButton = close;
     }
 
