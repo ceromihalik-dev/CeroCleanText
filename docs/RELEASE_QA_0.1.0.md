@@ -1,0 +1,66 @@
+# CeroCleanText 0.1.0 – Release QA
+
+## Build baseline
+
+- Branch: develop
+- Target: CeroCleanText 0.1.0
+- Windows: x64
+- Packages: Standard / Portable
+
+## Already physically verified
+
+- [x] Tray application starts
+- [x] Selected-text cleanup via global hotkey
+- [x] Selected-text cleanup via tray menu
+- [x] Unicode cleanup test including zero-width characters and special whitespace
+- [x] German characters Ä Ö Ü ä ö ü ß and € preserved
+- [x] Configurable global hotkey
+- [x] Hotkey persists after application restart
+- [x] C/broom branding visible in EXE, tray and dialogs
+- [x] Settings and About dialogs open
+
+## Release QA – remaining
+
+### Startup and process
+- [ ] Autostart enabled
+- [ ] Windows restart -> CeroCleanText starts automatically
+- [ ] Tray icon available after restart
+- [ ] Only one CeroCleanText instance can run
+
+### Notification
+- [ ] Cleanup notification enabled -> shown after changed text
+- [ ] Clean text / no change -> no success notification
+- [ ] Notification disabled -> no notification after changed text
+- [ ] Notification preference persists after restart
+
+### Clipboard
+- [ ] Clean clipboard command works
+- [ ] Selected-text cleanup restores previous clipboard content
+
+### External links
+- [ ] GitHub link opens correct project
+- [ ] PayPal support link opens correct hosted donation page
+
+### Compatibility
+- [ ] Notepad
+- [ ] Microsoft Word
+- [ ] Browser text field
+- [ ] Optional: Thunderbird / Outlook
+
+### Resource usage
+- [ ] Idle CPU checked
+- [ ] Idle memory checked
+- [ ] No unexpected background polling observed
+
+### Packaging
+- [ ] Standard build starts with .NET 10 Desktop Runtime installed
+- [ ] Portable build starts without separate runtime dependency
+- [ ] Version metadata = 0.1.0
+- [ ] C/broom icon visible on release executable
+- [ ] Windows security/SmartScreen behavior documented
+
+## Release gate
+
+Status: IN QA
+
+Release only after all required checks pass or any accepted limitation is explicitly documented.
