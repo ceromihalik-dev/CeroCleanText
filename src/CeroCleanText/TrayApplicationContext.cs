@@ -19,7 +19,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         var menu = new ContextMenuStrip();
         menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync());
-        menu.Items.Add("Zwischenablage bereinigen", null, (_, _) => SelectionCleaner.CleanClipboard());
+        menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_startupItem);
         menu.Items.Add(new ToolStripSeparator());
