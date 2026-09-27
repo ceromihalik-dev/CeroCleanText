@@ -39,10 +39,22 @@ internal sealed class ForegroundWindowTracker : IDisposable
             return;
 
         GetWindowThreadProcessId(hwnd, out var processId);
-        if (processId == Environment.ProcessId)
+        if (processId == Environment.ProcessId || IsShellUiWindow(hwnd))
             return;
 
         LastExternalWindow = hwnd;
+    }
+
+    private static bool IsShellUiWindow(IntPtr hwnd)
+    {
+        var className = new StringBuilder(256);
+        if (GetClassName(hwnd, className, className.Capacity) <= 0)
+            return false;
+
+        return className.ToString() is
+            "Shell_TrayWnd" or
+            "Shell_SecondaryTrayWnd" or
+            "NotifyIconOverflowWindow";
     }
 
     public void Dispose()
@@ -73,6 +85,9 @@ internal sealed class ForegroundWindowTracker : IDisposable
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
