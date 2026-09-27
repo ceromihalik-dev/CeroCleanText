@@ -15,10 +15,10 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
-        ClientSize = new Size(650, 455);
+        ClientSize = new Size(720, 430);
         Font = new Font("Segoe UI", 10F);
 
-        var nav = new Panel { Dock = DockStyle.Left, Width = 165, BackColor = Color.FromArgb(245, 248, 252) };
+        var nav = new Panel { Dock = DockStyle.Left, Width = 175, BackColor = Color.FromArgb(245, 248, 252) };
         _content.Dock = DockStyle.Fill;
 
         var generalButton = NavButton("⚙  Allgemein", 28);
@@ -49,7 +49,8 @@ internal sealed class SettingsForm : Form
         _startup.Location = new Point(32, 80);
         _content.Controls.Add(_startup);
         _content.Controls.Add(Help(
-            "CeroCleanText wird automatisch mit Windows gestartet und im Infobereich (Tray) ausgeführt.\r\nEs wird kein Hauptfenster dauerhaft geöffnet.",
+            "CeroCleanText wird automatisch mit Windows gestartet und im Infobereich (Tray) ausgeführt.\r\n" +
+            "Es wird kein Hauptfenster dauerhaft geöffnet.",
             32, 118));
     }
 
@@ -105,7 +106,7 @@ internal sealed class SettingsForm : Form
         FlatStyle = FlatStyle.Flat,
         FlatAppearance = { BorderSize = 0 },
         Location = new Point(12, y),
-        Size = new Size(140, 42),
+        Size = new Size(150, 42),
         Font = new Font("Segoe UI", 10F)
     };
 
