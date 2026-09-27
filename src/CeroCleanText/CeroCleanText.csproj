@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="../CeroCleanText.Core/CeroCleanText.Core.csproj" />
   </ItemGroup>
-  <Target Name="GenerateApplicationIcon" BeforeTargets="Compile">
+  <Target Name="GenerateApplicationIcon" BeforeTargets="BeforeBuild;CoreCompile">
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\..\build\GenerateIcon.ps1&quot; -OutputPath &quot;$(MSBuildProjectDirectory)\Assets\CeroCleanText.ico&quot;" />
   </Target>
 </Project>
