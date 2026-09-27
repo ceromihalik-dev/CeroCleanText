@@ -10,36 +10,63 @@ internal sealed class AboutForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
-        ClientSize = new Size(430, 230);
+        ClientSize = new Size(520, 430);
+        Font = new Font("Segoe UI", 10F);
+
+        var mark = new Label
+        {
+            Text = "C",
+            TextAlign = ContentAlignment.MiddleCenter,
+            Font = new Font("Segoe UI", 28F, FontStyle.Bold),
+            ForeColor = SystemColors.Highlight,
+            Location = new Point(28, 30),
+            Size = new Size(70, 70)
+        };
 
         var title = new Label
         {
             Text = "CeroCleanText",
             AutoSize = true,
-            Font = new Font(Font.FontFamily, 16, FontStyle.Bold),
-            Location = new Point(20, 18)
+            Font = new Font("Segoe UI", 18F, FontStyle.Bold),
+            Location = new Point(115, 35)
         };
-
-        var info = new Label
+        var version = new Label
         {
-            Text = "Version 0.1.0\r\n\r\nLightweight Windows text cleaner.\r\nText processing runs locally on this computer.",
+            Text = "Version 0.1.0",
             AutoSize = true,
-            Location = new Point(22, 60)
+            Font = new Font("Segoe UI", 12F),
+            Location = new Point(116, 72)
+        };
+        var slogan = new Label
+        {
+            Text = "Sauberer Text – ganz automatisch.",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 11F),
+            Location = new Point(30, 125)
+        };
+        var privacy = new Label
+        {
+            Text = "CeroCleanText bereinigt markierten Text vollständig lokal auf Ihrem Computer.\r\n" +
+                   "Es werden keine Textdaten an das Internet oder externe Dienste übertragen.",
+            AutoSize = true,
+            Location = new Point(30, 165)
         };
 
         var github = new LinkLabel
         {
-            Text = "GitHub – CeroCleanText",
+            Text = "GitHub-Projekt öffnen",
             AutoSize = true,
-            Location = new Point(22, 140)
+            Location = new Point(55, 250),
+            Font = new Font("Segoe UI", 10.5F)
         };
         github.LinkClicked += (_, _) => OpenUrl("https://github.com/ceromihalik-dev/CeroCleanText");
 
         var support = new LinkLabel
         {
-            Text = "❤️ Projekt unterstützen",
+            Text = "❤️  Projekt unterstützen (PayPal)",
             AutoSize = true,
-            Location = new Point(22, 170)
+            Location = new Point(55, 292),
+            Font = new Font("Segoe UI", 10.5F)
         };
         support.LinkClicked += (_, _) => OpenUrl("https://www.paypal.com/donate/?hosted_button_id=Y39Q96VMSJWG2");
 
@@ -47,11 +74,11 @@ internal sealed class AboutForm : Form
         {
             Text = "Schließen",
             DialogResult = DialogResult.OK,
-            Size = new Size(90, 30),
-            Location = new Point(320, 185)
+            Size = new Size(120, 36),
+            Location = new Point(370, 365)
         };
 
-        Controls.AddRange([title, info, github, support, close]);
+        Controls.AddRange([mark, title, version, slogan, privacy, github, support, close]);
         AcceptButton = close;
     }
 
