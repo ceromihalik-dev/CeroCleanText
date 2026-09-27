@@ -22,16 +22,16 @@
 ## Release QA – remaining
 
 ### Startup and process
-- [ ] Autostart enabled
-- [ ] Windows restart -> CeroCleanText starts automatically
-- [ ] Tray icon available after restart
-- [ ] Only one CeroCleanText instance can run
+- [x] Autostart enabled
+- [x] Windows restart -> CeroCleanText starts automatically
+- [x] Tray icon available after restart
+- [x] Only one CeroCleanText instance can run
 
 ### Notification
-- [ ] Cleanup notification enabled -> shown after changed text
-- [ ] Clean text / no change -> no success notification
-- [ ] Notification disabled -> no notification after changed text
-- [ ] Notification preference persists after restart
+- [x] Cleanup notification enabled -> shown after changed text
+- [x] Clean text / no change -> no success notification
+- [x] Notification disabled -> no notification after changed text
+- [x] Notification preference persists after restart
 
 ### Clipboard
 - [ ] Clean clipboard command works
@@ -61,6 +61,6 @@
 
 ## Release gate
 
-Status: IN QA
+Status: IN QA – Startup / process / notification block PASS
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
