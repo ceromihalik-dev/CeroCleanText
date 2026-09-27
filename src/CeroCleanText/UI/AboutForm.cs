@@ -13,7 +13,7 @@ internal sealed class AboutForm : Form
         AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(560, 440);
         Font = new Font("Segoe UI", 10F);
-        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
+        Icon = BrandingService.AppIcon;
 
         var mark = new Label
         {
@@ -90,13 +90,14 @@ internal sealed class AboutForm : Form
 
                 var logo = new PictureBox
         {
-            Image = Icon.ExtractAssociatedIcon(Application.ExecutablePath)?.ToBitmap(),
+            Image = BrandingService.CreateLogoBitmap(),
             SizeMode = PictureBoxSizeMode.Zoom,
             Location = new Point(28, 28),
             Size = new Size(92, 92)
         };
 
         Controls.AddRange([logo, title, version, slogan, privacy, github, support, copyright, close]);
+        FormClosed += (_, _) => logo.Image?.Dispose();
         AcceptButton = close;
     }
 
