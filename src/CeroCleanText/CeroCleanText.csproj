@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\CeroCleanText.ico</ApplicationIcon>
     <AssemblyName>CeroCleanText</AssemblyName>
     <RootNamespace>CeroCleanText</RootNamespace>
     <Version>0.1.0</Version>
@@ -20,4 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="../CeroCleanText.Core/CeroCleanText.Core.csproj" />
   </ItemGroup>
+  <Target Name="GenerateApplicationIcon" BeforeTargets="Compile">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\..\build\GenerateIcon.ps1&quot; -OutputPath &quot;$(MSBuildProjectDirectory)\Assets\CeroCleanText.ico&quot;" />
+  </Target>
 </Project>
