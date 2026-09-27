@@ -10,7 +10,7 @@ internal sealed class AboutForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
-        ClientSize = new Size(520, 430);
+        ClientSize = new Size(560, 440);
         Font = new Font("Segoe UI", 10F);
 
         var mark = new Label
@@ -28,35 +28,35 @@ internal sealed class AboutForm : Form
             Text = "CeroCleanText",
             AutoSize = true,
             Font = new Font("Segoe UI", 18F, FontStyle.Bold),
-            Location = new Point(115, 35)
+            Location = new Point(125, 32)
         };
         var version = new Label
         {
             Text = "Sauberer Text – ganz automatisch.\r\nVersion 0.1.0",
             AutoSize = true,
             Font = new Font("Segoe UI", 12F),
-            Location = new Point(116, 70)
+            Location = new Point(126, 68)
         };
         var slogan = new Label
         {
             Text = "100 % lokal · keine Textdatenübertragung",
             AutoSize = true,
             Font = new Font("Segoe UI", 11F),
-            Location = new Point(30, 125)
+            Location = new Point(30, 135)
         };
         var privacy = new Label
         {
             Text = "CeroCleanText bereinigt markierten Text vollständig lokal auf Ihrem Computer.\r\n" +
                    "Es werden keine Textdaten an das Internet oder externe Dienste übertragen.",
             AutoSize = true,
-            Location = new Point(30, 165)
+            Location = new Point(30, 185)
         };
 
         var github = new LinkLabel
         {
             Text = "GitHub-Projekt öffnen",
             AutoSize = true,
-            Location = new Point(55, 250),
+            Location = new Point(55, 270),
             Font = new Font("Segoe UI", 10.5F)
         };
         github.LinkClicked += (_, _) => OpenUrl("https://github.com/ceromihalik-dev/CeroCleanText");
@@ -65,7 +65,7 @@ internal sealed class AboutForm : Form
         {
             Text = "❤️  Projekt unterstützen (PayPal)",
             AutoSize = true,
-            Location = new Point(55, 292),
+            Location = new Point(55, 310),
             Font = new Font("Segoe UI", 10.5F)
         };
         support.LinkClicked += (_, _) => OpenUrl("https://www.paypal.com/donate/?hosted_button_id=Y39Q96VMSJWG2");
@@ -75,7 +75,7 @@ internal sealed class AboutForm : Form
             Text = "© 2026 C. Mihalik",
             AutoSize = true,
             ForeColor = SystemColors.GrayText,
-            Location = new Point(30, 370)
+            Location = new Point(30, 395)
         };
 
         var close = new Button
@@ -83,7 +83,7 @@ internal sealed class AboutForm : Form
             Text = "Schließen",
             DialogResult = DialogResult.OK,
             Size = new Size(120, 36),
-            Location = new Point(370, 365)
+            Location = new Point(410, 385)
         };
 
         Controls.AddRange([mark, title, version, slogan, privacy, github, support, copyright, close]);
