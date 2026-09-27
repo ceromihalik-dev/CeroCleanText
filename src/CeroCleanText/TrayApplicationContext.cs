@@ -19,14 +19,6 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _startupItem.CheckedChanged += (_, _) => StartupService.SetEnabled(_startupItem.Checked);
 
         var menu = new ContextMenuStrip();
-        menu.Opening += (_, _) => _lastTargetWindow = SelectionCleaner.GetForegroundTarget();
-        menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
-        menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
-        menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add(_startupItem);
-        menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add("Beenden", null, (_, _) => ExitThread());
-
         _trayIcon = new NotifyIcon
         {
             Text = "CeroCleanText 0.1.0",
@@ -34,6 +26,18 @@ internal sealed class TrayApplicationContext : ApplicationContext
             ContextMenuStrip = menu,
             Visible = true
         };
+
+        _trayIcon.MouseDown += (_, e) =>
+        {
+            if (e.Button == MouseButtons.Right)
+                _lastTargetWindow = SelectionCleaner.GetForegroundTarget();
+        };
+        menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
+        menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
+        menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add(_startupItem);
+        menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add("Beenden", null, (_, _) => ExitThread());
 
         _hotkey = new HotkeyWindow();
         _hotkey.Pressed += async (_, _) =>
