@@ -19,7 +19,7 @@ internal sealed class SettingsForm : Form
         AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(720, 430);
         Font = new Font("Segoe UI", 10F);
-        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
+        Icon = BrandingService.AppIcon;
 
         var nav = new Panel { Dock = DockStyle.Left, Width = 175, BackColor = Color.FromArgb(245, 248, 252) };
         _content.Dock = DockStyle.Fill;
