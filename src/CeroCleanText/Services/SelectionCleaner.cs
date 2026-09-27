@@ -5,12 +5,13 @@ namespace CeroCleanText.Services;
 
 internal static class SelectionCleaner
 {
+    public sealed record SelectionCleanResult(bool Success, string Stage, int InputLength = 0, int OutputLength = 0, bool Changed = false);
     private const int ClipboardRetries = 8;
     private const int RetryDelayMs = 25;
     private const int CopyWaitMs = 120;
     private const int PasteWaitMs = 180;
 
-    public static async Task<bool> CleanSelectionAsync(IntPtr targetWindow)
+    public static async Task<SelectionCleanResult> CleanSelectionAsync(IntPtr targetWindow)
     {
         var backup = await TryGetClipboardDataAsync();
 
@@ -28,11 +29,11 @@ internal static class SelectionCleaner
 
             var selectedText = await TryGetTextAsync();
             if (selectedText is null)
-                return false;
+                return new SelectionCleanResult(false, "COPY_EMPTY");
 
             var cleaned = CleanEngine.Clean(selectedText);
             if (!await TrySetTextAsync(cleaned))
-                return false;
+                return new SelectionCleanResult(false, "CLIPBOARD_SET_FAILED", selectedText.Length, cleaned.Length, cleaned != selectedText);
 
             if (targetWindow != IntPtr.Zero)
             {
@@ -42,7 +43,7 @@ internal static class SelectionCleaner
 
             SendKeys.SendWait("^v");
             await Task.Delay(PasteWaitMs);
-            return true;
+            return new SelectionCleanResult(true, "PASTE_SENT", selectedText.Length, cleaned.Length, cleaned != selectedText);
         }
         finally
         {
