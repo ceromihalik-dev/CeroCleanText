@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace CeroCleanText.Services;
@@ -10,12 +11,16 @@ internal static class KeyboardInputService
     private const uint KeyUp = 0x0002;
     private const uint InputKeyboard = 1;
 
+    public static string? LastError { get; private set; }
+
     public static bool Copy() => SendChord(VkControl, VkC);
 
     public static bool Paste() => SendChord(VkControl, VkV);
 
     private static bool SendChord(ushort modifier, ushort key)
     {
+        LastError = null;
+
         var inputs = new[]
         {
             Key(modifier, false),
@@ -24,7 +29,13 @@ internal static class KeyboardInputService
             Key(modifier, true)
         };
 
-        return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<INPUT>()) == inputs.Length;
+        var sent = SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<INPUT>());
+        if (sent == inputs.Length)
+            return true;
+
+        var error = Marshal.GetLastWin32Error();
+        LastError = $"SendInput sent {sent}/{inputs.Length}; Win32={error} ({new Win32Exception(error).Message}); INPUT={Marshal.SizeOf<INPUT>()}";
+        return false;
     }
 
     private static INPUT Key(ushort virtualKey, bool keyUp) => new()
@@ -50,8 +61,20 @@ internal static class KeyboardInputService
     [StructLayout(LayoutKind.Explicit)]
     private struct InputUnion
     {
-        [FieldOffset(0)]
-        public KEYBDINPUT ki;
+        [FieldOffset(0)] public MOUSEINPUT mi;
+        [FieldOffset(0)] public KEYBDINPUT ki;
+        [FieldOffset(0)] public HARDWAREINPUT hi;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MOUSEINPUT
+    {
+        public int dx;
+        public int dy;
+        public uint mouseData;
+        public uint dwFlags;
+        public uint time;
+        public UIntPtr dwExtraInfo;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -62,6 +85,14 @@ internal static class KeyboardInputService
         public uint dwFlags;
         public uint time;
         public UIntPtr dwExtraInfo;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct HARDWAREINPUT
+    {
+        public uint uMsg;
+        public ushort wParamL;
+        public ushort wParamH;
     }
 
     [DllImport("user32.dll", SetLastError = true)]
