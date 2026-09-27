@@ -1,4 +1,5 @@
 using CeroCleanText.Services;
+using CeroCleanText.UI;
 
 namespace CeroCleanText;
 
@@ -38,7 +39,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
         menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_startupItem);
+        menu.Items.Add("Einstellungen", null, (_, _) => ShowSettings());
         menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add("Über CeroCleanText", null, (_, _) => ShowAbout());
         menu.Items.Add("❤️ Projekt unterstützen", null, (_, _) => OpenDonationPage());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Beenden", null, (_, _) => ExitThread());
@@ -61,6 +64,19 @@ internal sealed class TrayApplicationContext : ApplicationContext
         {
             // Keep the tray process alive if clipboard/input access is temporarily unavailable.
         }
+    }
+
+    private void ShowSettings()
+    {
+        using var form = new SettingsForm();
+        form.ShowDialog();
+        _startupItem.Checked = StartupService.IsEnabled();
+    }
+
+    private static void ShowAbout()
+    {
+        using var form = new AboutForm();
+        form.ShowDialog();
     }
 
     private static void OpenDonationPage()
