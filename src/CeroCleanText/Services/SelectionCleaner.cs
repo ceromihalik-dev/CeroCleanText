@@ -1,4 +1,5 @@
 using CeroCleanText.Core;
+using System.Runtime.InteropServices;
 
 namespace CeroCleanText.Services;
 
