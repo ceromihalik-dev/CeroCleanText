@@ -13,6 +13,23 @@ internal static class KeyboardInputService
 
     public static string? LastError { get; private set; }
 
+    public static async Task<bool> WaitForHotkeyModifiersReleasedAsync(int timeoutMs = 1000)
+    {
+        var started = Environment.TickCount64;
+        while (IsKeyDown(VkControl) || IsKeyDown(0x12)) // VK_MENU / Alt
+        {
+            if (Environment.TickCount64 - started >= timeoutMs)
+            {
+                LastError = "Ctrl/Alt were not released before copy timeout.";
+                return false;
+            }
+
+            await Task.Delay(10);
+        }
+
+        return true;
+    }
+
     public static bool Copy() => SendChord(VkControl, VkC);
 
     public static bool Paste() => SendChord(VkControl, VkV);
@@ -94,6 +111,12 @@ internal static class KeyboardInputService
         public ushort wParamL;
         public ushort wParamH;
     }
+
+    private static bool IsKeyDown(int virtualKey)
+        => (GetAsyncKeyState(virtualKey) & 0x8000) != 0;
+
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern uint SendInput(uint cInputs, INPUT[] pInputs, int cbSize);
