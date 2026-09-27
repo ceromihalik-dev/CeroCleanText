@@ -53,20 +53,11 @@ internal sealed class TrayApplicationContext : ApplicationContext
     {
         try
         {
-            var result = await SelectionCleaner.CleanSelectionAsync(targetWindow, waitForHotkeyRelease);
-            MessageBox.Show(
-                $"Stage: {result.Stage}\r\nSuccess: {result.Success}\r\nInput: {result.InputLength}\r\nOutput: {result.OutputLength}\r\nChanged: {result.Changed}",
-                "CeroCleanText QA Diagnose",
-                MessageBoxButtons.OK,
-                result.Success ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+            await SelectionCleaner.CleanSelectionAsync(targetWindow, waitForHotkeyRelease);
         }
-        catch (Exception ex)
+        catch
         {
-            MessageBox.Show(
-                $"{ex.GetType().Name}: {ex.Message}",
-                "CeroCleanText QA Fehler",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            // Keep the tray process alive if clipboard/input access is temporarily unavailable.
         }
     }
 
