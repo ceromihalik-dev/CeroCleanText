@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="src/CeroCleanText.Core/CeroCleanText.Core.csproj" />
+  <Project Path="src/CeroCleanText/CeroCleanText.csproj" />
   <Project Path="tests/CeroCleanText.Core.Tests/CeroCleanText.Core.Tests.csproj" />
 </Solution>
