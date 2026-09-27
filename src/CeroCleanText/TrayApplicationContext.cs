@@ -39,6 +39,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_startupItem);
         menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add("❤️ Projekt unterstützen", null, (_, _) => OpenDonationPage());
+        menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Beenden", null, (_, _) => ExitThread());
 
         _hotkey = new HotkeyWindow();
@@ -58,6 +60,22 @@ internal sealed class TrayApplicationContext : ApplicationContext
         catch
         {
             // Keep the tray process alive if clipboard/input access is temporarily unavailable.
+        }
+    }
+
+    private static void OpenDonationPage()
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "https://www.paypal.com/donate/?hosted_button_id=Y39Q96VMSJWG2",
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            // Donation is optional; a browser launch failure must never affect the app.
         }
     }
 
