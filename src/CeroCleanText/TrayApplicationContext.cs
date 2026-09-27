@@ -39,15 +39,15 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _hotkey.Pressed += async (_, _) =>
         {
             var target = SelectionCleaner.GetForegroundTarget();
-            await CleanSelectionAsync(target);
+            await CleanSelectionAsync(target, waitForHotkeyRelease: true);
         };
     }
 
-    private static async Task CleanSelectionAsync(IntPtr targetWindow)
+    private static async Task CleanSelectionAsync(IntPtr targetWindow, bool waitForHotkeyRelease = false)
     {
         try
         {
-            var result = await SelectionCleaner.CleanSelectionAsync(targetWindow);
+            var result = await SelectionCleaner.CleanSelectionAsync(targetWindow, waitForHotkeyRelease);
             MessageBox.Show(
                 $"Stage: {result.Stage}\r\nSuccess: {result.Success}\r\nInput: {result.InputLength}\r\nOutput: {result.OutputLength}\r\nChanged: {result.Changed}",
                 "CeroCleanText QA Diagnose",
