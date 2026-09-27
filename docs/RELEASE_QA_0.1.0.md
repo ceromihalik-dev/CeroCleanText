@@ -42,10 +42,10 @@
 - [x] PayPal support link opens correct hosted donation page
 
 ### Compatibility
-- [ ] Notepad
-- [ ] Microsoft Word
-- [ ] Browser text field
-- [ ] Optional: Thunderbird / Outlook
+- [x] Notepad
+- [x] Microsoft Word
+- [x] Browser text field
+- [x] Optional: Thunderbird / Outlook
 
 ### Resource usage
 - [ ] Idle CPU checked
@@ -61,6 +61,6 @@
 
 ## Release gate
 
-Status: IN QA – startup/process/notification and clipboard/link blocks PASS
+Status: IN QA – startup/process/notification, clipboard/link and compatibility blocks PASS
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
