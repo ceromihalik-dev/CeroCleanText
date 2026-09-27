@@ -52,6 +52,18 @@ internal sealed class SettingsForm : Form
             "CeroCleanText wird automatisch mit Windows gestartet und im Infobereich (Tray) ausgeführt.\r\n" +
             "Es wird kein Hauptfenster dauerhaft geöffnet.",
             32, 118));
+
+        _content.Controls.Add(new Label
+        {
+            Text = "Programm",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+            Location = new Point(32, 205)
+        });
+        _content.Controls.Add(Help(
+            "CeroCleanText läuft im Hintergrund und kann über das Tray-Symbol oder den Hotkey jederzeit genutzt werden.\r\n" +
+            "Es werden keine Textdaten an das Internet übertragen.",
+            32, 242));
     }
 
     private void ShowHotkey()
@@ -83,7 +95,10 @@ internal sealed class SettingsForm : Form
     {
         PreparePage("Info");
         _content.Controls.Add(Help(
-            "CeroCleanText 0.1.0\r\nSauberer Text – ganz automatisch.\r\n\r\nTextbereinigung erfolgt vollständig lokal.\r\nEntwickler: C. Mihalik",
+            "CeroCleanText 0.1.0\r\nSauberer Text – ganz automatisch.\r\n\r\n" +
+            "100 % lokal · keine Textdatenübertragung\r\n" +
+            "Open Source auf GitHub\r\n" +
+            "Entwickler: C. Mihalik",
             32, 82));
     }
 
