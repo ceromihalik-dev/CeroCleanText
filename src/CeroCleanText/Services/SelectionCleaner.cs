@@ -7,14 +7,21 @@ internal static class SelectionCleaner
 {
     private const int ClipboardRetries = 8;
     private const int RetryDelayMs = 25;
-    private const int CopyWaitMs = 80;
+    private const int CopyWaitMs = 120;
+    private const int PasteWaitMs = 180;
 
-    public static async Task<bool> CleanSelectionAsync()
+    public static async Task<bool> CleanSelectionAsync(IntPtr targetWindow)
     {
         var backup = await TryGetClipboardDataAsync();
 
         try
         {
+            if (targetWindow != IntPtr.Zero)
+            {
+                SetForegroundWindow(targetWindow);
+                await Task.Delay(80);
+            }
+
             await TryClearClipboardAsync();
             SendKeys.SendWait("^c");
             await Task.Delay(CopyWaitMs);
@@ -27,8 +34,14 @@ internal static class SelectionCleaner
             if (!await TrySetTextAsync(cleaned))
                 return false;
 
+            if (targetWindow != IntPtr.Zero)
+            {
+                SetForegroundWindow(targetWindow);
+                await Task.Delay(50);
+            }
+
             SendKeys.SendWait("^v");
-            await Task.Delay(CopyWaitMs);
+            await Task.Delay(PasteWaitMs);
             return true;
         }
         finally
@@ -46,6 +59,8 @@ internal static class SelectionCleaner
 
         return await TrySetTextAsync(CleanEngine.Clean(text));
     }
+
+    public static IntPtr GetForegroundTarget() => GetForegroundWindow();
 
     private static async Task<string?> TryGetTextAsync()
     {
@@ -132,4 +147,11 @@ internal static class SelectionCleaner
             }
         }
     }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
 }
