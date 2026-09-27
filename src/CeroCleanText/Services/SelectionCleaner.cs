@@ -24,7 +24,8 @@ internal static class SelectionCleaner
             }
 
             await TryClearClipboardAsync();
-            SendKeys.SendWait("^c");
+            if (!KeyboardInputService.Copy())
+                return new SelectionCleanResult(false, "COPY_INPUT_FAILED");
             await Task.Delay(CopyWaitMs);
 
             var selectedText = await TryGetTextAsync();
@@ -41,7 +42,8 @@ internal static class SelectionCleaner
                 await Task.Delay(50);
             }
 
-            SendKeys.SendWait("^v");
+            if (!KeyboardInputService.Paste())
+                return new SelectionCleanResult(false, "PASTE_INPUT_FAILED", selectedText.Length, cleaned.Length, cleaned != selectedText);
             await Task.Delay(PasteWaitMs);
             return new SelectionCleanResult(true, "PASTE_SENT", selectedText.Length, cleaned.Length, cleaned != selectedText);
         }
