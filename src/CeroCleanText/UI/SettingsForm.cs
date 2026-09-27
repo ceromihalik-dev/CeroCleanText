@@ -67,6 +67,16 @@ internal sealed class SettingsForm : Form
             "CeroCleanText läuft im Hintergrund und kann über das Tray-Symbol oder den Hotkey jederzeit genutzt werden.\r\n" +
             "Es werden keine Textdaten an das Internet übertragen.",
             32, 242));
+
+        var notify = new CheckBox
+        {
+            Text = "Benachrichtigung nach erfolgreicher Bereinigung anzeigen",
+            AutoSize = true,
+            Checked = UserSettingsService.ShowCleanNotification,
+            Location = new Point(32, 325)
+        };
+        notify.CheckedChanged += (_, _) => UserSettingsService.ShowCleanNotification = notify.Checked;
+        _content.Controls.Add(notify);
     }
 
     private void ShowHotkey()
