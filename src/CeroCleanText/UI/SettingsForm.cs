@@ -1,0 +1,186 @@
+using CeroCleanText.Services;
+
+namespace CeroCleanText.UI;
+
+internal sealed class SettingsForm : Form
+{
+    private readonly Panel _content = new();
+    private readonly CheckBox _startup;
+    public event EventHandler<HotkeyChangeRequestedEventArgs>? HotkeyChangeRequested;
+
+    public SettingsForm()
+    {
+        Text = "CeroCleanText – Einstellungen";
+        StartPosition = FormStartPosition.CenterScreen;
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        MaximizeBox = false;
+        MinimizeBox = false;
+        ShowInTaskbar = false;
+        AutoScaleMode = AutoScaleMode.Dpi;
+        ClientSize = new Size(720, 430);
+        Font = new Font("Segoe UI", 10F);
+        Icon = BrandingService.AppIcon;
+
+        var nav = new Panel { Dock = DockStyle.Left, Width = 175, BackColor = Color.FromArgb(245, 248, 252) };
+        _content.Dock = DockStyle.Fill;
+
+        var generalButton = NavButton("⚙  Allgemein", 28);
+        var hotkeyButton = NavButton("⌨  Hotkey", 78);
+        var infoButton = NavButton("ⓘ  Info", 128);
+        generalButton.Click += (_, _) => { SelectNav(generalButton, hotkeyButton, infoButton); ShowGeneral(); };
+        hotkeyButton.Click += (_, _) => { SelectNav(hotkeyButton, generalButton, infoButton); ShowHotkey(); };
+        infoButton.Click += (_, _) => { SelectNav(infoButton, generalButton, hotkeyButton); ShowInfo(); };
+        nav.Controls.AddRange([generalButton, hotkeyButton, infoButton]);
+
+        _startup = new CheckBox
+        {
+            Text = "Mit Windows starten (Autostart)",
+            AutoSize = true,
+            Checked = StartupService.IsEnabled(),
+            Font = new Font("Segoe UI", 10.5F)
+        };
+        _startup.CheckedChanged += (_, _) => StartupService.SetEnabled(_startup.Checked);
+
+        Controls.Add(_content);
+        Controls.Add(nav);
+        SelectNav(generalButton, hotkeyButton, infoButton);
+        ShowGeneral();
+    }
+
+    private void ShowGeneral()
+    {
+        PreparePage("Allgemein");
+        _startup.Location = new Point(32, 80);
+        _content.Controls.Add(_startup);
+        _content.Controls.Add(Help(
+            "CeroCleanText wird automatisch mit Windows gestartet und im Infobereich (Tray) ausgeführt.\r\n" +
+            "Es wird kein Hauptfenster dauerhaft geöffnet.",
+            32, 118));
+
+        _content.Controls.Add(new Label
+        {
+            Text = "Programm",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+            Location = new Point(32, 205)
+        });
+        _content.Controls.Add(Help(
+            "CeroCleanText läuft im Hintergrund und kann über das Tray-Symbol oder den Hotkey jederzeit genutzt werden.\r\n" +
+            "Es werden keine Textdaten an das Internet übertragen.",
+            32, 242));
+
+        var notify = new CheckBox
+        {
+            Text = "Benachrichtigung nach erfolgreicher Bereinigung anzeigen",
+            AutoSize = true,
+            Checked = UserSettingsService.ShowCleanNotification,
+            Location = new Point(32, 325)
+        };
+        notify.CheckedChanged += (_, _) => UserSettingsService.ShowCleanNotification = notify.Checked;
+        _content.Controls.Add(notify);
+    }
+
+    private void ShowHotkey()
+    {
+        PreparePage("Hotkey");
+        var box = new TextBox
+        {
+            Text = HotkeyFormatter.Format(UserSettingsService.HotkeyModifiers, UserSettingsService.HotkeyKey),
+            ReadOnly = true,
+            Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+            Location = new Point(32, 80),
+            Size = new Size(255, 30)
+        };
+        var change = new Button
+        {
+            Text = "Ändern ...",
+            Location = new Point(305, 78),
+            Size = new Size(120, 34)
+        };
+        change.Click += (_, _) =>
+        {
+            using var dialog = new HotkeyDialog(UserSettingsService.HotkeyModifiers, UserSettingsService.HotkeyKey);
+            if (dialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            var args = new HotkeyChangeRequestedEventArgs(dialog.Modifiers, dialog.KeyCode);
+            HotkeyChangeRequested?.Invoke(this, args);
+            if (args.Accepted)
+                box.Text = HotkeyFormatter.Format(dialog.Modifiers, dialog.KeyCode);
+            else
+                MessageBox.Show(
+                    "Diese Tastenkombination ist bereits belegt oder konnte nicht registriert werden.",
+                    "CeroCleanText",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+        };
+
+        _content.Controls.AddRange([
+            box,
+            change,
+            Help("Mit diesem Hotkey wird der aktuell markierte Text bereinigt und wieder eingesetzt.\r\n" +
+                 "Mindestens Strg oder Alt ist erforderlich.", 32, 128)
+        ]);
+    }
+
+    private void ShowInfo()
+    {
+        PreparePage("Info");
+        _content.Controls.Add(Help(
+            "CeroCleanText 0.1.0\r\nSauberer Text – ganz automatisch.\r\n\r\n" +
+            "100 % lokal · keine Textdatenübertragung\r\n" +
+            "Open Source auf GitHub\r\n" +
+            "Entwickler: C. Mihalik",
+            32, 82));
+    }
+
+    private void PreparePage(string title)
+    {
+        _content.Controls.Clear();
+        _content.Controls.Add(new Label
+        {
+            Text = title,
+            AutoSize = true,
+            Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+            Location = new Point(30, 25)
+        });
+    }
+
+    private static void SelectNav(Button selected, params Button[] others)
+    {
+        selected.BackColor = Color.FromArgb(218, 237, 255);
+        selected.ForeColor = Color.FromArgb(0, 90, 190);
+        foreach (var button in others)
+        {
+            button.BackColor = Color.Transparent;
+            button.ForeColor = SystemColors.ControlText;
+        }
+    }
+
+    private static Button NavButton(string text, int y) => new()
+    {
+        Text = text,
+        TextAlign = ContentAlignment.MiddleLeft,
+        FlatStyle = FlatStyle.Flat,
+        FlatAppearance = { BorderSize = 0 },
+        Location = new Point(12, y),
+        Size = new Size(150, 42),
+        Font = new Font("Segoe UI", 10F)
+    };
+
+    private static Label Help(string text, int x, int y) => new()
+    {
+        Text = text,
+        AutoSize = false,
+        Size = new Size(465, 72),
+        ForeColor = SystemColors.GrayText,
+        Location = new Point(x, y)
+    };
+}
+
+internal sealed class HotkeyChangeRequestedEventArgs(uint modifiers, uint key) : EventArgs
+{
+    public uint Modifiers { get; } = modifiers;
+    public uint Key { get; } = key;
+    public bool Accepted { get; set; }
+}
