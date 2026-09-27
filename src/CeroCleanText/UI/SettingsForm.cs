@@ -6,6 +6,7 @@ internal sealed class SettingsForm : Form
 {
     private readonly Panel _content = new();
     private readonly CheckBox _startup;
+    public event EventHandler<HotkeyChangeRequestedEventArgs>? HotkeyChangeRequested;
 
     public SettingsForm()
     {
@@ -84,7 +85,7 @@ internal sealed class SettingsForm : Form
         PreparePage("Hotkey");
         var box = new TextBox
         {
-            Text = "Ctrl + Alt + T",
+            Text = HotkeyFormatter.Format(UserSettingsService.HotkeyModifiers, UserSettingsService.HotkeyKey),
             ReadOnly = true,
             Font = new Font("Segoe UI", 11F, FontStyle.Bold),
             Location = new Point(32, 80),
@@ -93,14 +94,32 @@ internal sealed class SettingsForm : Form
         var change = new Button
         {
             Text = "Ändern ...",
-            Enabled = false,
             Location = new Point(305, 78),
             Size = new Size(120, 34)
         };
+        change.Click += (_, _) =>
+        {
+            using var dialog = new HotkeyDialog(UserSettingsService.HotkeyModifiers, UserSettingsService.HotkeyKey);
+            if (dialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            var args = new HotkeyChangeRequestedEventArgs(dialog.Modifiers, dialog.KeyCode);
+            HotkeyChangeRequested?.Invoke(this, args);
+            if (args.Accepted)
+                box.Text = HotkeyFormatter.Format(dialog.Modifiers, dialog.KeyCode);
+            else
+                MessageBox.Show(
+                    "Diese Tastenkombination ist bereits belegt oder konnte nicht registriert werden.",
+                    "CeroCleanText",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+        };
+
         _content.Controls.AddRange([
             box,
             change,
-            Help("Mit diesem Hotkey wird der aktuell markierte Text bereinigt und wieder eingesetzt.\r\nDie freie Hotkey-Wahl folgt nach der 0.1.0-Grundabnahme.", 32, 128)
+            Help("Mit diesem Hotkey wird der aktuell markierte Text bereinigt und wieder eingesetzt.\r\n" +
+                 "Mindestens Strg oder Alt ist erforderlich.", 32, 128)
         ]);
     }
 
@@ -157,4 +176,11 @@ internal sealed class SettingsForm : Form
         ForeColor = SystemColors.GrayText,
         Location = new Point(x, y)
     };
+}
+
+internal sealed class HotkeyChangeRequestedEventArgs(uint modifiers, uint key) : EventArgs
+{
+    public uint Modifiers { get; } = modifiers;
+    public uint Key { get; } = key;
+    public bool Accepted { get; set; }
 }
