@@ -47,11 +47,20 @@ internal sealed class TrayApplicationContext : ApplicationContext
     {
         try
         {
-            await SelectionCleaner.CleanSelectionAsync(targetWindow);
+            var result = await SelectionCleaner.CleanSelectionAsync(targetWindow);
+            MessageBox.Show(
+                $"Stage: {result.Stage}\r\nSuccess: {result.Success}\r\nInput: {result.InputLength}\r\nOutput: {result.OutputLength}\r\nChanged: {result.Changed}",
+                "CeroCleanText QA Diagnose",
+                MessageBoxButtons.OK,
+                result.Success ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
         }
-        catch
+        catch (Exception ex)
         {
-            // Keep the tray process alive if clipboard access is temporarily unavailable.
+            MessageBox.Show(
+                $"{ex.GetType().Name}: {ex.Message}",
+                "CeroCleanText QA Fehler",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
     }
 
