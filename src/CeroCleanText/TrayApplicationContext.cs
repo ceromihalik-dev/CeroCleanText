@@ -7,6 +7,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _trayIcon;
     private readonly HotkeyWindow _hotkey;
     private readonly ToolStripMenuItem _startupItem;
+    private IntPtr _lastTargetWindow;
 
     public TrayApplicationContext()
     {
@@ -18,7 +19,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _startupItem.CheckedChanged += (_, _) => StartupService.SetEnabled(_startupItem.Checked);
 
         var menu = new ContextMenuStrip();
-        menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync());
+        menu.Opening += (_, _) => _lastTargetWindow = SelectionCleaner.GetForegroundTarget();
+        menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
         menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_startupItem);
@@ -34,14 +36,18 @@ internal sealed class TrayApplicationContext : ApplicationContext
         };
 
         _hotkey = new HotkeyWindow();
-        _hotkey.Pressed += async (_, _) => await CleanSelectionAsync();
+        _hotkey.Pressed += async (_, _) =>
+        {
+            var target = SelectionCleaner.GetForegroundTarget();
+            await CleanSelectionAsync(target);
+        };
     }
 
-    private async Task CleanSelectionAsync()
+    private static async Task CleanSelectionAsync(IntPtr targetWindow)
     {
         try
         {
-            await SelectionCleaner.CleanSelectionAsync();
+            await SelectionCleaner.CleanSelectionAsync(targetWindow);
         }
         catch
         {
