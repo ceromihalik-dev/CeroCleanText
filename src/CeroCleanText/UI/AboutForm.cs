@@ -12,10 +12,11 @@ internal sealed class AboutForm : Form
         ShowInTaskbar = false;
         ClientSize = new Size(560, 440);
         Font = new Font("Segoe UI", 10F);
+        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
 
         var mark = new Label
         {
-            Text = "C≡🧹",
+            Text = "",
             TextAlign = ContentAlignment.MiddleCenter,
             Font = new Font("Segoe UI", 18F, FontStyle.Bold),
             ForeColor = Color.FromArgb(0, 120, 215),
@@ -86,7 +87,15 @@ internal sealed class AboutForm : Form
             Location = new Point(410, 385)
         };
 
-        Controls.AddRange([mark, title, version, slogan, privacy, github, support, copyright, close]);
+                var logo = new PictureBox
+        {
+            Image = Icon.ExtractAssociatedIcon(Application.ExecutablePath)?.ToBitmap(),
+            SizeMode = PictureBoxSizeMode.Zoom,
+            Location = new Point(28, 28),
+            Size = new Size(78, 78)
+        };
+
+        Controls.AddRange([logo, title, version, slogan, privacy, github, support, copyright, close]);
         AcceptButton = close;
     }
 
