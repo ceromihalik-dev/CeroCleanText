@@ -4,6 +4,7 @@ namespace CeroCleanText.UI;
 
 internal sealed class SettingsForm : Form
 {
+    private readonly Panel _content = new();
     private readonly CheckBox _startup;
 
     public SettingsForm()
@@ -14,74 +15,101 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
-        ClientSize = new Size(510, 430);
+        ClientSize = new Size(650, 455);
         Font = new Font("Segoe UI", 10F);
 
-        var header = new Label
-        {
-            Text = "CeroCleanText – Einstellungen",
-            AutoSize = true,
-            Font = new Font("Segoe UI", 15F, FontStyle.Bold),
-            Location = new Point(28, 24)
-        };
+        var nav = new Panel { Dock = DockStyle.Left, Width = 165, BackColor = Color.FromArgb(245, 248, 252) };
+        _content.Dock = DockStyle.Fill;
 
-        var general = SectionLabel("Allgemein", 28, 78);
+        var generalButton = NavButton("⚙  Allgemein", 28);
+        var hotkeyButton = NavButton("⌨  Hotkey", 78);
+        var infoButton = NavButton("ⓘ  Info", 128);
+        generalButton.Click += (_, _) => ShowGeneral();
+        hotkeyButton.Click += (_, _) => ShowHotkey();
+        infoButton.Click += (_, _) => ShowInfo();
+        nav.Controls.AddRange([generalButton, hotkeyButton, infoButton]);
+
         _startup = new CheckBox
         {
             Text = "Mit Windows starten (Autostart)",
             AutoSize = true,
             Checked = StartupService.IsEnabled(),
-            Location = new Point(30, 120),
             Font = new Font("Segoe UI", 10.5F)
         };
-        var startupHelp = HelpLabel(
-            "CeroCleanText wird automatisch mit Windows gestartet\r\nund im Infobereich (Tray) ausgeführt.",
-            54, 151);
+        _startup.CheckedChanged += (_, _) => StartupService.SetEnabled(_startup.Checked);
 
-        var hotkeyTitle = SectionLabel("Hotkey", 28, 215);
-        var hotkeyBox = new TextBox
+        Controls.Add(_content);
+        Controls.Add(nav);
+        ShowGeneral();
+    }
+
+    private void ShowGeneral()
+    {
+        PreparePage("Allgemein");
+        _startup.Location = new Point(32, 80);
+        _content.Controls.Add(_startup);
+        _content.Controls.Add(Help(
+            "CeroCleanText wird automatisch mit Windows gestartet und im Infobereich (Tray) ausgeführt.\r\nEs wird kein Hauptfenster dauerhaft geöffnet.",
+            32, 118));
+    }
+
+    private void ShowHotkey()
+    {
+        PreparePage("Hotkey");
+        var box = new TextBox
         {
             Text = "Ctrl + Alt + T",
             ReadOnly = true,
-            Location = new Point(30, 255),
-            Size = new Size(300, 30),
-            Font = new Font("Segoe UI", 11F, FontStyle.Bold)
+            Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+            Location = new Point(32, 80),
+            Size = new Size(255, 30)
         };
-        var hotkeyHelp = HelpLabel(
-            "Mit diesem Hotkey wird der aktuell markierte Text\nbereinigt und wieder eingesetzt.",
-            30, 296);
-
-        var ok = new Button
+        var change = new Button
         {
-            Text = "OK",
-            DialogResult = DialogResult.OK,
-            Size = new Size(130, 38),
-            Location = new Point(215, 365)
+            Text = "Ändern ...",
+            Enabled = false,
+            Location = new Point(305, 78),
+            Size = new Size(120, 34)
         };
-        var cancel = new Button
-        {
-            Text = "Abbrechen",
-            DialogResult = DialogResult.Cancel,
-            Size = new Size(130, 38),
-            Location = new Point(355, 365)
-        };
-
-        _startup.CheckedChanged += (_, _) => StartupService.SetEnabled(_startup.Checked);
-
-        Controls.AddRange([header, general, _startup, startupHelp, hotkeyTitle, hotkeyBox, hotkeyHelp, ok, cancel]);
-        AcceptButton = ok;
-        CancelButton = cancel;
+        _content.Controls.AddRange([
+            box,
+            change,
+            Help("Mit diesem Hotkey wird der aktuell markierte Text bereinigt und wieder eingesetzt.\r\nDie freie Hotkey-Wahl folgt nach der 0.1.0-Grundabnahme.", 32, 128)
+        ]);
     }
 
-    private static Label SectionLabel(string text, int x, int y) => new()
+    private void ShowInfo()
+    {
+        PreparePage("Info");
+        _content.Controls.Add(Help(
+            "CeroCleanText 0.1.0\r\nSauberer Text – ganz automatisch.\r\n\r\nTextbereinigung erfolgt vollständig lokal.\r\nEntwickler: C. Mihalik",
+            32, 82));
+    }
+
+    private void PreparePage(string title)
+    {
+        _content.Controls.Clear();
+        _content.Controls.Add(new Label
+        {
+            Text = title,
+            AutoSize = true,
+            Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+            Location = new Point(30, 25)
+        });
+    }
+
+    private static Button NavButton(string text, int y) => new()
     {
         Text = text,
-        AutoSize = true,
-        Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-        Location = new Point(x, y)
+        TextAlign = ContentAlignment.MiddleLeft,
+        FlatStyle = FlatStyle.Flat,
+        FlatAppearance = { BorderSize = 0 },
+        Location = new Point(12, y),
+        Size = new Size(140, 42),
+        Font = new Font("Segoe UI", 10F)
     };
 
-    private static Label HelpLabel(string text, int x, int y) => new()
+    private static Label Help(string text, int x, int y) => new()
     {
         Text = text,
         AutoSize = true,
