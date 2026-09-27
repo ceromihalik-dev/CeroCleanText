@@ -15,10 +15,10 @@ internal sealed class AboutForm : Form
 
         var mark = new Label
         {
-            Text = "C",
+            Text = "C≡🧹",
             TextAlign = ContentAlignment.MiddleCenter,
-            Font = new Font("Segoe UI", 28F, FontStyle.Bold),
-            ForeColor = SystemColors.Highlight,
+            Font = new Font("Segoe UI", 18F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(0, 120, 215),
             Location = new Point(28, 30),
             Size = new Size(70, 70)
         };
