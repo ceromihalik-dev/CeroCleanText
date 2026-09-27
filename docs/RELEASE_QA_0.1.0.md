@@ -48,9 +48,9 @@
 - [x] Optional: Thunderbird / Outlook
 
 ### Resource usage
-- [ ] Idle CPU checked
-- [ ] Idle memory checked
-- [ ] No unexpected background polling observed
+- [x] Idle CPU checked – 0 % observed
+- [x] Idle memory checked – 9.1 MB observed
+- [x] No unexpected background polling observed – idle disk 0 MB/s and network 0 Mbit/s observed
 
 ### Packaging
 - [ ] Standard build starts with .NET 10 Desktop Runtime installed
@@ -61,6 +61,6 @@
 
 ## Release gate
 
-Status: IN QA – startup/process/notification, clipboard/link and compatibility blocks PASS
+Status: IN QA – startup/process/notification, clipboard/link, compatibility and resource blocks PASS
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
