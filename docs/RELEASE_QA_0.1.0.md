@@ -53,14 +53,14 @@
 - [x] No unexpected background polling observed – idle disk 0 MB/s and network 0 Mbit/s observed; repeated stress cycle shows no continuing memory growth
 
 ### Packaging
-- [ ] Standard build starts with .NET 10 Desktop Runtime installed
-- [ ] Portable build starts without separate runtime dependency
-- [ ] Version metadata = 0.1.0
-- [ ] C/broom icon visible on release executable
-- [ ] Windows security/SmartScreen behavior documented
+- [x] Standard build starts with .NET 10 Desktop Runtime installed – physically verified PASS
+- [x] Portable build starts without separate runtime dependency – physically verified PASS
+- [x] Version metadata = 0.1.0 – physically verified PASS
+- [x] C/broom icon visible on release executable – physically verified PASS
+- [x] Windows security/SmartScreen behavior documented – unsigned 0.1.0 may trigger reputation warning; code signing is not included in this release
 
 ## Release gate
 
-Status: IN QA – startup/process/notification, clipboard/link, compatibility and resource blocks PASS
+Status: RELEASE GATE PASS
 
 Release only after all required checks pass or any accepted limitation is explicitly documented.
