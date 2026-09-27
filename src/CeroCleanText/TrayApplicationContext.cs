@@ -7,10 +7,12 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _trayIcon;
     private readonly HotkeyWindow _hotkey;
     private readonly ToolStripMenuItem _startupItem;
+    private readonly ForegroundWindowTracker _foregroundTracker;
     private IntPtr _lastTargetWindow;
 
     public TrayApplicationContext()
     {
+        _foregroundTracker = new ForegroundWindowTracker();
         _startupItem = new ToolStripMenuItem("Mit Windows starten")
         {
             Checked = StartupService.IsEnabled(),
@@ -30,7 +32,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _trayIcon.MouseDown += (_, e) =>
         {
             if (e.Button == MouseButtons.Right)
-                _lastTargetWindow = SelectionCleaner.GetForegroundTarget();
+                _lastTargetWindow = _foregroundTracker.LastExternalWindow;
         };
         menu.Items.Add("Markierten Text bereinigen", null, async (_, _) => await CleanSelectionAsync(_lastTargetWindow));
         menu.Items.Add("Zwischenablage bereinigen", null, async (_, _) => await SelectionCleaner.CleanClipboardAsync());
@@ -73,6 +75,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
         _hotkey.Dispose();
+        _foregroundTracker.Dispose();
         base.ExitThreadCore();
     }
 }
