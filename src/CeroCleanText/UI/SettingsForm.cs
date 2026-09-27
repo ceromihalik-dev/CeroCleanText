@@ -142,7 +142,8 @@ internal sealed class SettingsForm : Form
     private static Label Help(string text, int x, int y) => new()
     {
         Text = text,
-        AutoSize = true,
+        AutoSize = false,
+        Size = new Size(465, 72),
         ForeColor = SystemColors.GrayText,
         Location = new Point(x, y)
     };
